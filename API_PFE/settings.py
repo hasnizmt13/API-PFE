@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+
 DEBUG=False
 ALLOWED_HOSTS = []
 
@@ -19,7 +21,6 @@ if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Load .env file
-import os
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'default_secret_key')
 
