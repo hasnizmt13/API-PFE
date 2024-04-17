@@ -2,11 +2,13 @@ import json
 from urllib.parse import urlencode
 
 import requests
+import os
+API_key=os.environ.get('API_key', 'default_secret_key')
 
 def create_data():
     """Creates the data for the routing problem."""
     data = {
-        'API_key': 'AIzaSyACNlnN4eWz6z4ExnKtNFPkSiAhu0R2YIg',
+        'API_key': API_key,
         'addresses': [
             '2+Rue+Alexis+de+Tocqueville,+78000+Versailles',
             'UVSQ+-+UFR+des+Sciences+-+Universite+Paris-Saclay,+45+Av.+des+Etats+Unis,+78000+Versailles',
