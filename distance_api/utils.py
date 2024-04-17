@@ -19,7 +19,6 @@ def create_data():
             'Château+de+Versailles',
             '67+Av.+de+Saint-Cloud,+78000+Versailles',
             '21+Pl.+du+Grand+Ouest,+91300+Massy',
-            '67+Av.+Pablo+Picasso,+92000+Nanterre'
 
         ]
     }
