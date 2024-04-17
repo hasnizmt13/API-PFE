@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
 
 DEBUG=False
 ALLOWED_HOSTS = []
@@ -22,7 +23,7 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 # Load .env file
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'default_secret_key')
+SECRET_KEY = config('SECRET_KEY', 'default_secret_key')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
