@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 from decouple import config
 
-DEBUG=False
+DEBUG=True
 ALLOWED_HOSTS = []
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')

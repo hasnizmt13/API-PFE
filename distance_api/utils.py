@@ -7,20 +7,13 @@ from decouple import config
 
 key=config('API_key')
 print(key)
-def create_data():
+def create_data(addresses, num_vehicles):
     
     """Creates the data for the routing problem."""
     data = {
         'API_key': key,
-        'addresses': [
-            '2+Rue+Alexis+de+Tocqueville,+78000+Versailles',
-            'UVSQ+-+UFR+des+Sciences+-+Universite+Paris-Saclay,+45+Av.+des+Etats+Unis,+78000+Versailles',
-            'Résidence+Ecla+Paris+Massy-Palaiseau',
-            'Château+de+Versailles',
-            '67+Av.+de+Saint-Cloud,+78000+Versailles',
-            '21+Pl.+du+Grand+Ouest,+91300+Massy',
-
-        ]
+        'addresses': addresses,
+        'num_vehicles': num_vehicles
     }
     print(data)
     return data
@@ -67,16 +60,16 @@ def build_distance_matrix(response):
     """Builds a matrix of distances from the JSON response."""
     distance_matrix = []
     for row in response['rows']:
-        row_list = [element['distance']['value'] if 'distance' in element else float('inf') for element in row['elements']]
+        row_list = [element['duration']['value'] if 'duration' in element else float('inf') for element in row['elements']]
         distance_matrix.append(row_list)
     return distance_matrix
 
 
-def create_data_model():
+def create_data_model(addresses, num_vehicles):
     """Stores the data for the problem."""
-    data = create_data()
+    data = create_data(addresses, num_vehicles)
     distance_matrix = create_distance_matrix(data)
     data["distance_matrix"] = distance_matrix
-    data["num_vehicles"] = 4
+    data["num_vehicles"] = num_vehicles
     data["depot"] = 0
     return data

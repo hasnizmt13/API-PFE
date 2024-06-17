@@ -1,3 +1,4 @@
+import re
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from .utils import create_data_model
@@ -5,12 +6,16 @@ from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 
 @require_http_methods(["GET"])  # Décorez la vue pour n'accepter que les requêtes GET
 def calculate_distance(request):
+    addresses_str = request.GET.get('addresses', '')
+    addresses = re.split(r',(?=\S)', addresses_str)
+    num_vehicles = int(request.GET.get('num_vehicles', 1))
     vehicle_id = request.GET.get('vehicle_id', None)  # Récupérer l'ID du véhicule de la requête
     if vehicle_id is not None:
         vehicle_id = int(vehicle_id)  # Convertir en entier si présent
 
     # Création des données pour le problème de routage
-    data = create_data_model()
+    data =create_data_model(addresses, num_vehicles)
+
 
     # Création du gestionnaire d'index de routage et du modèle de routage
     manager = pywrapcp.RoutingIndexManager(len(data["distance_matrix"]), data["num_vehicles"], data["depot"])
@@ -27,12 +32,12 @@ def calculate_distance(request):
     routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
 
     # Ajout de la contrainte de distance
-    dimension_name = "Distance"
+    dimension_name = "Time"
     routing.AddDimension(
         transit_callback_index,
         0,  # slack
-        70000,  # distance maximale de parcours pour un véhicule
-        True,  # cumul de distance à zéro au départ
+        10000,  # Duree maximale de parcours pour un véhicule
+        True,  # cumul de temps à zéro au départ
         dimension_name
     )
     distance_dimension = routing.GetDimensionOrDie(dimension_name)
@@ -70,11 +75,11 @@ def extract_solution(data, manager, routing, solution, vehicle_id):
             route['route'].append({
                 'from': data['addresses'][node_index],
                 'to': data['addresses'][next_node_index],
-                'distance': routing.GetArcCostForVehicle(index, solution.Value(routing.NextVar(index)), vid)
+                'duree': routing.GetArcCostForVehicle(index, solution.Value(routing.NextVar(index)), vid)
             })
             route_distance += routing.GetArcCostForVehicle(index, solution.Value(routing.NextVar(index)), vid)
             index = solution.Value(routing.NextVar(index))
-        route['total_distance'] = route_distance
+        route['total_duree'] = route_distance
         total_distance += route_distance
         routes.append(route)
-    return {'routes': routes, 'total_distance': total_distance}
+    return {'routes': routes, 'total_duree': total_distance}
