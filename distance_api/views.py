@@ -36,7 +36,7 @@ def calculate_distance(request):
     routing.AddDimension(
         transit_callback_index,
         0,  # slack
-        10000,  # Duree maximale de parcours pour un véhicule
+        6000,  # Duree maximale de parcours pour un véhicule
         True,  # cumul de temps à zéro au départ
         dimension_name
     )
