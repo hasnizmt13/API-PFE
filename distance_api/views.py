@@ -49,6 +49,14 @@ def calculate_distance(request):
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
     )
 
+    # Activation de la recherche locale guidée
+    search_parameters.local_search_metaheuristic = (
+        routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
+    )
+
+    # Temps limite raisonnable pour la recherche (10 secondes ici)
+    search_parameters.time_limit.FromSeconds(10)
+
     # Résolution du problème de routage
     solution = routing.SolveWithParameters(search_parameters)
     if solution:
